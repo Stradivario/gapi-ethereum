@@ -5,6 +5,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
 Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@gapi/core");
 const ethereum_config_1 = require("./ethereum.config");
@@ -40,4 +43,7 @@ GapiEthereumModule = GapiEthereumModule_1 = __decorate([
     })
 ], GapiEthereumModule);
 exports.GapiEthereumModule = GapiEthereumModule;
+__export(require("./ethereum.config"));
+__export(require("./web3.injection"));
+__export(require("./web3.typings"));
 var GapiEthereumModule_1;
