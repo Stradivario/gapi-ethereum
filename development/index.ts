@@ -34,3 +34,4 @@ export class GapiEthereumModule {
 export * from './ethereum.config';
 export * from './web3.injection';
 export * from './web3.typings';
+export * from './helpers';

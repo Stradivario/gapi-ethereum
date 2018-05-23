@@ -37,12 +37,12 @@ Then generate modules using [TypeChain](https://github.com/Neufund/TypeChain)
 To install it type:
 
 ```bash
-npm i -g typechain
+$ npm i -g typechain
 ```
 
 Use it as folow inside Gapi root project folder
 ```bash
-typechain --force --outDir src/app/core/contracts './truffle/build/contracts/*.json'
+$ typechain --force --outDir src/app/core/contracts './truffle/build/contracts/*.json'
 ```
 
 Then import your contract as follow
@@ -64,15 +64,15 @@ export class ContractsModule {
                 {
                     provide: Coin,
                     deps: [Web3InjectionToken],
-                    useFactory: (value: Web3InjectionToken) => {
-                        return Coin.createAndValidate(value.web3, CoinABI.networks[Object.keys(CoinABI.networks)[0]].address);
+                    useFactory: (web3InjectionToken: Web3InjectionToken) => {
+                        return Coin.createAndValidate(web3InjectionToken.web3, CoinABI.networks[Object.keys(CoinABI.networks)[0]].address);
                     }
                 },
                 {
                     provide: CoinCrowdsale,
                     deps: [Web3InjectionToken],
-                    useFactory: (value: Web3InjectionToken) => {
-                        return CoinCrowdsale.createAndValidate(value.web3, CoinCrowdsaleABI.networks[Object.keys(CoinCrowdsaleABI.networks)[0]].address);
+                    useFactory: (web3InjectionToken: Web3InjectionToken) => {
+                        return CoinCrowdsale.createAndValidate(web3InjectionToken.web3, CoinCrowdsaleABI.networks[Object.keys(CoinCrowdsaleABI.networks)[0]].address);
                     }
                 }
             ]
@@ -94,11 +94,12 @@ import { CoinCrowdsale } from '../core/contracts/CoinCrowdsale';
 export class EthereumCrowdsaleType {
     startTime: number | GraphQLScalarType = GraphQLInt;
     endTime: number | GraphQLScalarType = GraphQLInt;
-    hasEnded: number | GraphQLScalarType = GraphQLBoolean;
-    token: number | GraphQLScalarType = GraphQLString;
+    hasEnded: boolean | GraphQLScalarType = GraphQLBoolean;
+    token: string | GraphQLScalarType = GraphQLString;
     weiRaised: number | GraphQLScalarType = GraphQLInt;
     wallet: string | GraphQLScalarType = GraphQLString;
 }
+
 
 @GapiController()
 export class EthereumQueriesController {
@@ -110,15 +111,15 @@ export class EthereumQueriesController {
     @Type(EthereumCrowdsaleType)
     @Public()
     @Query()
-    async getCrowdsaleInfo(root, payload, context): EthereumCrowdsaleType  {
-        const crowdsale = await this.crowdsale;
-        const crowdsaleType: EthereumCrowdsaleType = {
-            startTime: (await crowdsale.startTime).toNumber();
-            endTime: (await crowdsale.endTime).toNumber();
-            hasEnded: await crowdsale.hasEnded;
-            token: await crowdsale.token;
-            weiRaised: (await crowdsale.weiRaised).toNumber();
-            wallet: await crowdsale.wallet;
+    async getCrowdsaleInfo(root, payload, context): Promise<EthereumCrowdsaleType>  {
+        const crowdsale = await this.phoneumCrowdsale;
+        const crowdsaleType = {
+            startTime: (await crowdsale.startTime).toNumber(),
+            endTime: (await crowdsale.endTime).toNumber(),
+            hasEnded: await crowdsale.hasEnded,
+            token: await crowdsale.token,
+            weiRaised: (await crowdsale.weiRaised).toNumber(),
+            wallet: await crowdsale.wallet,
         };
         console.log('START TIME: ', crowdsaleType.startTime);
         console.log('END TIME: ', crowdsaleType.endTime);
@@ -135,15 +136,16 @@ export class EthereumQueriesController {
 If you want to use Web3InjectionToken use it the following way
 ```typescript
 import { GapiController } from '@gapi/core';
+import { Web3InjectionToken } from '@gapi/ethereum';
 
 @GapiController()
 export class EthereumQueriesController {
 
     constructor(
-        @Inject(Web3InjectionToken) private value: Web3InjectionToken
+        @Inject(Web3InjectionToken) private web3InjectionToken: Web3InjectionToken
     ) {
-        this.value.web3;
-        this.value.provider;
+        this.web3InjectionToken.web3;
+        this.web3InjectionToken.provider;
     }
 
 }

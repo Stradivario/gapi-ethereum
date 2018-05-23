@@ -46,4 +46,5 @@ exports.GapiEthereumModule = GapiEthereumModule;
 __export(require("./ethereum.config"));
 __export(require("./web3.injection"));
 __export(require("./web3.typings"));
+__export(require("./helpers"));
 var GapiEthereumModule_1;
