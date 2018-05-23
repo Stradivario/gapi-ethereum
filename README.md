@@ -132,7 +132,22 @@ export class EthereumQueriesController {
 }
 
 ```
+If you want to use Web3InjectionToken use it the following way
+```typescript
+import { GapiController } from '@gapi/core';
 
+@GapiController()
+export class EthereumQueriesController {
+
+    constructor(
+        @Inject(Web3InjectionToken) private value: Web3InjectionToken
+    ) {
+        this.value.web3;
+        this.value.provider;
+    }
+
+}
+```
 TODO: Better documentation...
 
 Enjoy ! :)
