@@ -88,7 +88,7 @@ import {
     Query, GraphQLNonNull, Type,
     GapiController, GraphQLInt, Public
 } from '@gapi/core';
-import { PhoneumCoinCrowdsale } from '../core/contracts/PhoneumCoinCrowdsale';
+import { CoinCrowdsale } from '../core/contracts/CoinCrowdsale';
 
 @GapiObjectType()
 export class EthereumCrowdsaleType {
@@ -104,14 +104,14 @@ export class EthereumCrowdsaleType {
 export class EthereumQueriesController {
 
     constructor(
-        private phoneumCrowdsale: PhoneumCoinCrowdsale
+        private crowdsale: CoinCrowdsale
     ) {}
 
     @Type(EthereumCrowdsaleType)
     @Public()
     @Query()
     async getCrowdsaleInfo(root, payload, context): EthereumCrowdsaleType  {
-        const crowdsale = await this.phoneumCrowdsale;
+        const crowdsale = await this.crowdsale;
         const crowdsaleType: EthereumCrowdsaleType = {
             startTime: (await crowdsale.startTime).toNumber();
             endTime: (await crowdsale.endTime).toNumber();
