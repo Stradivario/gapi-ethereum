@@ -12,9 +12,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@gapi/core");
 const ethereum_config_1 = require("./ethereum.config");
 const web3_injection_1 = require("./web3.injection");
+const helpers_1 = require("./helpers");
 const Web3 = require('web3');
 let GapiEthereumModule = GapiEthereumModule_1 = class GapiEthereumModule {
     static forRoot(config) {
+        let UserAddedContracts = [];
+        if (config.contracts && config.contracts.length) {
+            config.contracts.forEach(i => UserAddedContracts.push({
+                provide: i.contract,
+                deps: [web3_injection_1.Web3Token],
+                useFactory: (web3) => {
+                    return i.contract.createAndValidate(web3, helpers_1.getContractAddress(i.abi));
+                }
+            }));
+        }
         return {
             gapiModule: GapiEthereumModule_1,
             services: [
@@ -23,14 +34,19 @@ let GapiEthereumModule = GapiEthereumModule_1 = class GapiEthereumModule {
                     useValue: config || new ethereum_config_1.GapiEthereumConfig()
                 },
                 {
-                    provide: web3_injection_1.Web3InjectionToken,
-                    useFactory: () => {
-                        const web3 = new Web3(null);
+                    provide: web3_injection_1.Web3Token,
+                    useValue: new Web3(null)
+                },
+                {
+                    provide: web3_injection_1.Web3ProviderToken,
+                    deps: [web3_injection_1.Web3Token],
+                    useFactory: (web3) => {
                         const provider = new web3.providers.HttpProvider(`${config.rpc}:${config.port}`);
                         web3.setProvider(provider);
-                        return { provider, web3 };
+                        return provider;
                     }
-                }
+                },
+                ...UserAddedContracts
             ]
         };
     }

@@ -82,6 +82,40 @@ export class ContractsModule {
 
 ```
 
+You can use also `contracts` parameter inside forRoot configuration without importing private ContractsModule
+```typescript
+
+import { GapiModule } from '@gapi/core';
+import { GapiEthereumModule } from '@gapi/ethereum';
+import { Coin } from '../core/contracts/Coin';
+import { CoinCrowdsale } from '../core/contracts/CoinCrowdsale';
+
+const CoinCrowdsaleABI = require('../../../truffle/build/contracts/CoinCrowdsale.json');
+const CoinABI = require('../../../truffle/build/contracts/Coin.json');
+
+@GapiModule({
+    imports: [
+        GapiEthereumModule.forRoot({
+            port: process.env.ETHEREUM_PORT || 8545,
+            rpc: process.env.ETHEREUM_HOST || 'http://localhost',
+            contracts: [
+                {
+                    contract: Coin,
+                    abi: CoinABI
+                },
+                {
+                    contract: CoinCrowdsale,
+                    abi: CoinCrowdsaleABI
+                }
+            ]
+        })
+        // ContractsModule.forRoot()
+    ]
+})
+export class CoreModule { }
+```
+
+
 Then use them inside your controller
 ```typescript
 import {
