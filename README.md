@@ -48,7 +48,7 @@ $ typechain --force --outDir src/app/core/contracts './truffle/build/contracts/*
 Then import your contract as follow
 ```typescript
 import { GapiModule, GapiModuleWithServices } from '@gapi/core';
-import { Web3InjectionToken } from '@gapi/ethereum';
+import { Web3Token } from '@gapi/ethereum';
 import { Coin } from '../core/contracts/Coin';
 import { CoinCrowdsale } from '../core/contracts/CoinCrowdsale';
 
@@ -63,16 +63,16 @@ export class ContractsModule {
             services: [
                 {
                     provide: Coin,
-                    deps: [Web3InjectionToken],
-                    useFactory: (web3InjectionToken: Web3InjectionToken) => {
-                        return Coin.createAndValidate(web3InjectionToken.web3, CoinABI.networks[Object.keys(CoinABI.networks)[0]].address);
+                    deps: [Web3Token],
+                    useFactory: (web3: Web3Token) => {
+                        return Coin.createAndValidate(web3, CoinABI.networks[Object.keys(CoinABI.networks)[0]].address);
                     }
                 },
                 {
                     provide: CoinCrowdsale,
-                    deps: [Web3InjectionToken],
-                    useFactory: (web3InjectionToken: Web3InjectionToken) => {
-                        return CoinCrowdsale.createAndValidate(web3InjectionToken.web3, CoinCrowdsaleABI.networks[Object.keys(CoinCrowdsaleABI.networks)[0]].address);
+                    deps: [Web3Token],
+                    useFactory: (web3: Web3Token) => {
+                        return CoinCrowdsale.createAndValidate(web3, CoinCrowdsaleABI.networks[Object.keys(CoinCrowdsaleABI.networks)[0]].address);
                     }
                 }
             ]
@@ -167,19 +167,20 @@ export class EthereumQueriesController {
 }
 
 ```
-If you want to use Web3InjectionToken use it the following way
+If you want to use Web3Token use it the following way
 ```typescript
 import { GapiController } from '@gapi/core';
-import { Web3InjectionToken } from '@gapi/ethereum';
+import { Web3Token, Web3ProviderToken } from '@gapi/ethereum';
 
 @GapiController()
 export class EthereumQueriesController {
 
     constructor(
-        @Inject(Web3InjectionToken) private web3InjectionToken: Web3InjectionToken
+        @Inject(Web3Token) private web3: Web3Token,
+        @Inject(Web3ProviderToken) private provider: Web3ProviderToken
     ) {
-        this.web3InjectionToken.web3;
-        this.web3InjectionToken.provider;
+        this.web3;
+        this.provider;
     }
 
 }
