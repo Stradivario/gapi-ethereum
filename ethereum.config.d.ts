@@ -1,4 +1,4 @@
 export declare class GapiEthereumConfig {
     rpc: string;
-    port: number;
+    port: number | number;
 }

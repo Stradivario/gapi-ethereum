@@ -10,7 +10,7 @@ const core_1 = require("@gapi/core");
 let GapiEthereumConfig = class GapiEthereumConfig {
     constructor() {
         this.rpc = 'http://localhost';
-        this.port = 5432;
+        this.port = 8545;
     }
 };
 GapiEthereumConfig = __decorate([

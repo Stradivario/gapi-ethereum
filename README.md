@@ -23,7 +23,7 @@ import { GapiEthereumModule } from '@gapi/ethereum';
 @GapiModule({
     imports: [
         GapiEthereumModule.forRoot({
-            port: 7545,
+            port: 8545,
             rpc: 'http://localhost'
         }),
         ContractsModule.forRoot()
@@ -112,7 +112,7 @@ export class EthereumQueriesController {
     @Public()
     @Query()
     async getCrowdsaleInfo(root, payload, context): Promise<EthereumCrowdsaleType>  {
-        const crowdsale = await this.phoneumCrowdsale;
+        const crowdsale = await this.crowdsale;
         const crowdsaleType = {
             startTime: (await crowdsale.startTime).toNumber(),
             endTime: (await crowdsale.endTime).toNumber(),
@@ -150,6 +150,32 @@ export class EthereumQueriesController {
 
 }
 ```
+
+
+Running private blockchain using Ganache with Docker
+
+### Docker
+
+The Simplest way to get started with the Docker image:
+
+```Bash
+docker run -d -p 8545:8545 trufflesuite/ganache-cli:latest
+```
+
+To pass options to ganache-cli through Docker simply add the arguments to
+the run command:
+
+```Bash
+docker run -d -p 8545:8545 trufflesuite/ganache-cli:latest -a 10 --debug
+```
+
+To build the Docker container from source:
+
+```Bash
+git clone https://github.com/trufflesuite/ganache-cli.git && cd ganache-cli
+docker build -t trufflesuite/ganache-cli .
+```
+
 TODO: Better documentation...
 
 Enjoy ! :)
