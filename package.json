@@ -24,14 +24,14 @@
   "module": "gapi-ethereum-module.js",
   "typings": "gapi-ethereum-module.d.ts",
   "peerDependencies": {
-    "@gapi/core": "^0.7.258",
+    "@gapi/core": "^0.7.260",
     "rxjs": "^5.5.6"
   },
   "dependencies": {
     "web3": "^0.20.2"
   },
   "devDependencies": {
-    "@gapi/core": "^0.7.258",
+    "@gapi/core": "^0.7.260",
     "@types/node": "^9.6.18"
   }
 }
