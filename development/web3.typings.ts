@@ -1,4 +1,3 @@
-import { BigNumber } from 'bn.js';
 
 
 // '{'jsonrpc':'2.0','method':'eth_sendTransaction','params':[{see above}],'id':1}'
@@ -272,26 +271,26 @@ export type Unit = 'kwei' | 'femtoether' | 'babbage' | 'mwei' | 'picoether' | 'l
 export type BlockType = 'latest' | 'pending' | 'genesis' | number;
 export declare interface Iban { null; }
 export declare interface Utils {
-    BN: BigNumber;
+    BN: any;
     unitMap: any;
     _: any;
     // _: us.UnderscoreStatic;
     isBN(any): boolean;
-    isBigNumber(any): boolean;
+    isany(any): boolean;
     isAddress(any): boolean;
     isHex(any): boolean;
     asciiToHex(val: string): string;
     hexToAscii(val: string): string;
     bytesToHex(val: number[]): string;
-    numberToHex(val: number | BigNumber): string;
+    numberToHex(val: number | any): string;
     checkAddressChecksum(address: string): boolean;
     fromAscii(val: string): string;
-    fromDecimal(val: string | number | BigNumber): string;
+    fromDecimal(val: string | number | any): string;
     fromUtf8(val: string): string;
-    fromWei(val: string | number | BigNumber, unit: Unit): string | BigNumber;
+    fromWei(val: string | number | any, unit: Unit): string | any;
     hexToBytes(val: string): number[];
-    hexToNumber(val: string | number | BigNumber): number;
-    hexToNumberString(val: string | number | BigNumber): string;
+    hexToNumber(val: string | number | any): number;
+    hexToNumberString(val: string | number | any): string;
     hexToString(val: string): string;
     hexToUtf8(val: string): string;
     keccak256(val: string): string;
@@ -304,12 +303,12 @@ export declare interface Utils {
     randomHex(bytes: number): string;
     stringToHex(val: string): string;
     toAscii(hex: string): string;
-    toBN(any): BigNumber;
+    toBN(any): any;
     toChecksumAddress(val: string): string;
     toDecimal(val: any): number;
     toHex(val: any): string;
     toUtf8(val: any): string;
-    toWei(val: string | number | BigNumber, unit: Unit): string | BigNumber;
+    toWei(val: string | number | any, unit: Unit): string | any;
 }
 export declare interface Contract {
     options: {
@@ -361,7 +360,7 @@ export declare interface Eth {
     Iban: new (address: string) => Iban;
     Contract: new (jsonInterface: any[], address?: string, options?: {
         from?: string;
-        gas?: string | number | BigNumber;
+        gas?: string | number | any;
         gasPrice?: number;
         data?: string;
     }) => Contract;

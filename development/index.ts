@@ -1,32 +1,29 @@
-import { GapiModule, GapiModuleWithServices } from '@gapi/core';
-import { GapiEthereumConfig } from './ethereum.config';
+import { Module, ModuleWithServices } from '@rxdi/core';
+import { EthereumConfig } from './ethereum.config';
 import { Web3Token, Web3ProviderToken } from './web3.injection';
 import { getContractAddress } from './helpers';
-const Web3 = require('web3');
+import Web3 = require('web3');
 
-@GapiModule({
-    services: [
-        GapiEthereumConfig
-    ]
+@Module({
+    services: [EthereumConfig]
 })
-export class GapiEthereumModule {
-    public static forRoot(config: GapiEthereumConfig): GapiModuleWithServices {
+export class EthereumModule {
+    public static forRoot(config: EthereumConfig): ModuleWithServices {
         let UserAddedContracts = [];
         if (config.contracts && config.contracts.length) {
             config.contracts.forEach(i => UserAddedContracts.push({
                 provide: i.contract,
                 deps: [Web3Token],
-                useFactory: (web3: Web3Token) => {
-                    return i.contract.createAndValidate(web3, getContractAddress(i.abi));
-                }
+                lazy: true,
+                useFactory: async (web3: Web3) => await i.contract.createAndValidate(web3, getContractAddress(i.abi))
             }))
         }
         return {
-            gapiModule: GapiEthereumModule,
+            module: EthereumModule,
             services: [
                 {
-                    provide: GapiEthereumConfig,
-                    useValue: config || new GapiEthereumConfig()
+                    provide: EthereumConfig,
+                    useValue: config || new EthereumConfig()
                 },
                 {
                     provide: Web3Token,
@@ -35,7 +32,7 @@ export class GapiEthereumModule {
                 {
                     provide: Web3ProviderToken,
                     deps: [Web3Token],
-                    useFactory: (web3: Web3Token) => {
+                    useFactory: (web3: Web3) => {
                         const provider = new web3.providers.HttpProvider(`${config.rpc}:${config.port}`);
                         web3.setProvider(provider);
                         return provider;

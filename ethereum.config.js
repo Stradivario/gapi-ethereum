@@ -6,14 +6,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const core_1 = require("@gapi/core");
-let GapiEthereumConfig = class GapiEthereumConfig {
+const core_1 = require("@rxdi/core");
+let EthereumConfig = class EthereumConfig {
     constructor() {
         this.rpc = 'http://localhost';
         this.port = 8545;
     }
 };
-GapiEthereumConfig = __decorate([
+EthereumConfig = __decorate([
     core_1.Service()
-], GapiEthereumConfig);
-exports.GapiEthereumConfig = GapiEthereumConfig;
+], EthereumConfig);
+exports.EthereumConfig = EthereumConfig;

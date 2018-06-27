@@ -1,4 +1,4 @@
-import { InjectionToken } from '@gapi/core';
+import { InjectionToken } from '@rxdi/core';
 import { Eth, Utils, Provider, Providers, HttpProvider } from './web3.typings';
 export declare const Web3Token: InjectionToken<{}>;
 export declare const Web3ProviderToken: InjectionToken<{}>;

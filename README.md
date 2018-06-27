@@ -18,12 +18,12 @@ $ npm install @gapi/ethereum --save
 ##### Import inside AppModule or CoreModule
 ```typescript
 
-import { GapiModule } from '@gapi/core';
-import { GapiEthereumModule } from '@gapi/ethereum';
+import { Module } from '@rxdi/core';
+import { EthereumModule } from '@gapi/ethereum';
 
-@GapiModule({
+@Module({
     imports: [
-        GapiEthereumModule.forRoot({
+        EthereumModule.forRoot({
             port: 8545,
             rpc: 'http://localhost',
         }),
@@ -61,10 +61,10 @@ More information you can find [here](https://github.com/Stradivario/gapi-ethereu
 Usage:
 
 ```typescript
-import { GapiController } from '@gapi/core';
+import { Controller } from '@rxdi/core';
 import { Web3Token, Web3ProviderToken } from '@gapi/ethereum';
 
-@GapiController() // or @Service()
+@Controller() // or @Service()
 export class EthereumQueriesController {
 
     constructor(
@@ -112,17 +112,17 @@ $ typechain --force --outDir src/app/core/contracts './truffle-metacoin-example/
 You can use `contracts` parameter inside forRoot configuration to import freshly generated contracts mmm.... smellss like Ethereum :D
 ```typescript
 
-import { GapiModule } from '@gapi/core';
-import { GapiEthereumModule } from '@gapi/ethereum';
+import { Module } from '@gapi/core';
+import { EthereumModule } from '@gapi/ethereum';
 import { Coin } from '../core/contracts/Coin';
 import { CoinCrowdsale } from '../core/contracts/CoinCrowdsale';
 
 const CoinCrowdsaleABI = require('../../../truffle-metacoin-example/build/contracts/CoinCrowdsale.json');
 const CoinABI = require('../../../truffle-metacoin-example/build/contracts/Coin.json');
 
-@GapiModule({
+@Module({
     imports: [
-        GapiEthereumModule.forRoot({
+        EthereumModule.forRoot({
             port: process.env.ETHEREUM_PORT || 8545,
             rpc: process.env.ETHEREUM_HOST || 'http://localhost',
             contracts: [
@@ -143,7 +143,7 @@ export class CoreModule { }
 
 Or you can import your contract like raw TypeChain contracts
 ```typescript
-import { GapiModule, GapiModuleWithServices } from '@gapi/core';
+import { Module, ModuleWithServices } from '@gapi/core';
 import { Web3Token } from '@gapi/ethereum';
 import { Coin } from '../core/contracts/Coin';
 import { CoinCrowdsale } from '../core/contracts/CoinCrowdsale';
@@ -151,24 +151,26 @@ import { CoinCrowdsale } from '../core/contracts/CoinCrowdsale';
 const CoinCrowdsaleABI = require('../../../truffle-metacoin-example/build/contracts/CoinCrowdsale.json');
 const CoinABI = require('../../../truffle-metacoin-example/build/contracts/Coin.json');
 
-@GapiModule()
+@Module()
 export class ContractsModule {
-    public static forRoot(): GapiModuleWithServices {
+    public static forRoot(): ModuleWithServices {
         return {
             gapiModule: ContractsModule,
             services: [
                 {
                     provide: Coin,
                     deps: [Web3Token],
-                    useFactory: (web3: Web3Token) => {
-                        return Coin.createAndValidate(web3, CoinABI.networks[Object.keys(CoinABI.networks)[0]].address);
+                    lazy: true,
+                    useFactory: async (web3: Web3Token) => {
+                        return await Coin.createAndValidate(web3, CoinABI.networks[Object.keys(CoinABI.networks)[0]].address);
                     }
                 },
                 {
                     provide: CoinCrowdsale,
                     deps: [Web3Token],
-                    useFactory: (web3: Web3Token) => {
-                        return CoinCrowdsale.createAndValidate(web3, CoinCrowdsaleABI.networks[Object.keys(CoinCrowdsaleABI.networks)[0]].address);
+                    lazy: true,
+                    useFactory: async (web3: Web3Token) => {
+                        return await CoinCrowdsale.createAndValidate(web3, CoinCrowdsaleABI.networks[Object.keys(CoinCrowdsaleABI.networks)[0]].address);
                     }
                 }
             ]
@@ -182,13 +184,13 @@ Then import them inside your Core module
 
 ```typescript
 
-import { GapiModule } from '@gapi/core';
-import { GapiEthereumModule } from '@gapi/ethereum';
+import { Module } from '@gapi/core';
+import { EthereumModule } from '@gapi/ethereum';
 import { ContractsModule } from './ethereum/contracts.module';
 
-@GapiModule({
+@Module({
     imports: [
-        GapiEthereumModule.forRoot({
+        EthereumModule.forRoot({
             port: process.env.ETHEREUM_PORT || 8545,
             rpc: process.env.ETHEREUM_HOST || 'http://localhost'
         })
@@ -204,11 +206,11 @@ Then use them inside your controller
 ```typescript
 import {
     Query, GraphQLNonNull, Type,
-    GapiController, GraphQLInt, Public
+    Controller, GraphQLInt, Public
 } from '@gapi/core';
 import { CoinCrowdsale } from '../core/contracts/CoinCrowdsale';
 
-@GapiObjectType()
+@ObjectType()
 export class EthereumCrowdsaleType {
     startTime: number | GraphQLScalarType = GraphQLInt;
     endTime: number | GraphQLScalarType = GraphQLInt;
@@ -219,7 +221,7 @@ export class EthereumCrowdsaleType {
 }
 
 
-@GapiController()
+@Controller()
 export class EthereumQueriesController {
 
     constructor(
@@ -230,14 +232,13 @@ export class EthereumQueriesController {
     @Public()
     @Query()
     async getCrowdsaleInfo(root, payload, context): Promise<EthereumCrowdsaleType>  {
-        const crowdsale = await this.crowdsale;
         const crowdsaleType = {
-            startTime: (await crowdsale.startTime).toNumber(),
-            endTime: (await crowdsale.endTime).toNumber(),
-            hasEnded: await crowdsale.hasEnded,
-            token: await crowdsale.token,
-            weiRaised: (await crowdsale.weiRaised).toNumber(),
-            wallet: await crowdsale.wallet,
+            startTime: (await this.crowdsale.startTime).toNumber(),
+            endTime: (await this.crowdsale.endTime).toNumber(),
+            hasEnded: await this.crowdsale.hasEnded,
+            token: await this.crowdsale.token,
+            weiRaised: (await this.crowdsale.weiRaised).toNumber(),
+            wallet: await this.crowdsale.wallet,
         };
         console.log('START TIME: ', crowdsaleType.startTime);
         console.log('END TIME: ', crowdsaleType.endTime);

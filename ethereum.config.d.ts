@@ -1,7 +1,7 @@
-export declare class GapiEthereumConfig {
+export declare class EthereumConfig {
     rpc: string;
     port: number | string;
-    contracts: Array<{
+    contracts?: Array<{
         contract: any;
         abi: any;
     }>;

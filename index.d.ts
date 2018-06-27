@@ -1,7 +1,7 @@
-import { GapiModuleWithServices } from '@gapi/core';
-import { GapiEthereumConfig } from './ethereum.config';
-export declare class GapiEthereumModule {
-    static forRoot(config: GapiEthereumConfig): GapiModuleWithServices;
+import { ModuleWithServices } from '@rxdi/core';
+import { EthereumConfig } from './ethereum.config';
+export declare class EthereumModule {
+    static forRoot(config: EthereumConfig): ModuleWithServices;
 }
 export * from './ethereum.config';
 export * from './web3.injection';

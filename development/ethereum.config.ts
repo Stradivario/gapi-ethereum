@@ -1,8 +1,8 @@
-import { Service } from '@gapi/core';
+import { Service } from '@rxdi/core';
 
 @Service()
-export class GapiEthereumConfig {
+export class EthereumConfig {
     rpc: string = 'http://localhost';
     port: number | string = 8545;
-    contracts: Array<{contract: any; abi: any}>
+    contracts?: Array<{contract: any; abi: any}>
 }
