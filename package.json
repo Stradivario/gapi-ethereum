@@ -1,6 +1,6 @@
 {
   "name": "@gapi/ethereum",
-  "version": "1.2.24",
+  "version": "1.2.22",
   "repository": {
     "type": "git",
     "url": "https://github.com/Stradivario/gapi-ethereum.git"
@@ -24,14 +24,14 @@
   "module": "gapi-ethereum-module.js",
   "typings": "gapi-ethereum-module.d.ts",
   "peerDependencies": {
-    "@rxdi/core": "^0.0.217"
+    "@rxdi/core": "^0.0.219"
   },
   "dependencies": {
     "bn.js": "^4.11.8",
     "web3": "^0.20.2"
   },
   "devDependencies": {
-    "@rxdi/core": "^0.0.217",
+    "@rxdi/core": "^0.0.219",
     "@types/node": "^9.6.18",
     "@types/web3": "^1.0.0"
   }
