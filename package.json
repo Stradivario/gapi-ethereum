@@ -28,7 +28,7 @@
     "web3": "^0.20.2"
   },
   "devDependencies": {
-    "@rxdi/core": "^0.0.244",
+    "@rxdi/core": "^0.0.246",
     "@types/node": "^9.6.18",
     "@types/web3": "^1.0.0"
   }
